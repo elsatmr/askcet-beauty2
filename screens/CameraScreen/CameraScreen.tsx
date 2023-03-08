@@ -18,6 +18,8 @@ const CameraScreen = () => {
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const cameraRef = React.useRef<Camera>(null);
   const [imageUri, setImageUri] = React.useState<string>('');
+  const [colorBlindFilterOn, setColorBlindFilterOn] =
+    React.useState<boolean>(false);
 
   if (!permission) {
     // Camera permissions are still loading
@@ -36,11 +38,10 @@ const CameraScreen = () => {
     );
   }
 
-  function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back
-    );
-  }
+  const handleColorBlindFilterPress = async () => {
+    await takePicture();
+    setColorBlindFilterOn(true);
+  };
 
   const takePicture = async () => {
     if (cameraRef.current) {
@@ -63,18 +64,73 @@ const CameraScreen = () => {
         <Camera style={styles.camera} type={type} ref={cameraRef} />
       )}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.smallButton} onPress={takePicture}>
-          <Ionicons name="eye-outline" size={24} color="black" />
+        <TouchableOpacity
+          style={[
+            colorBlindFilterOn ? styles.activeSmallButton : styles.smallButton,
+          ]}
+          onPress={handleColorBlindFilterPress}
+        >
+          <Ionicons
+            name="eye-outline"
+            size={24}
+            color={colorBlindFilterOn ? 'white' : 'black'}
+          />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bigButton} onPress={takePicture}>
+        <TouchableOpacity style={styles.bigButton}>
           <MaterialCommunityIcons name="scan-helper" size={20} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.smallButton} onPress={takePicture}>
+        <TouchableOpacity style={styles.smallButton}>
           <Feather name="shopping-bag" size={24} color="black" />
         </TouchableOpacity>
       </View>
-
-      {/* </Camera> */}
+      {colorBlindFilterOn && (
+        <View style={styles.colorBlindFilterContainer}>
+          <TouchableOpacity>
+            <View style={styles.colorBlindFilterIconContainer}>
+              <Ionicons
+                name="eye"
+                size={24}
+                color="black"
+                style={{ textAlign: 'center' }}
+              />
+              <Text style={{ textAlign: 'center' }}>Normal</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.colorBlindFilterIconContainer}>
+              <Ionicons
+                name="eye-off"
+                size={24}
+                color="#BB6464"
+                style={{ textAlign: 'center' }}
+              />
+              <Text style={{ textAlign: 'center' }}>Protanopia</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.colorBlindFilterIconContainer}>
+              <Ionicons
+                name="eye-off"
+                size={24}
+                color="#90A17D"
+                style={{ textAlign: 'center' }}
+              />
+              <Text style={{ textAlign: 'center' }}>Deuteranopia</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.colorBlindFilterIconContainer}>
+              <Ionicons
+                name="eye-off"
+                size={24}
+                color="#7895B2"
+                style={{ textAlign: 'center' }}
+              />
+              <Text style={{ textAlign: 'center' }}>Tritanopia</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -94,12 +150,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: '10%',
+    bottom: '13%',
     width: '100%',
   },
   smallButton: {
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.2)',
+    borderColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     width: 80,
@@ -109,9 +165,21 @@ const styles = StyleSheet.create({
     margin: '3%',
     opacity: 0.6,
   },
+  activeSmallButton: {
+    borderWidth: 1,
+    borderColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 80,
+    height: 80,
+    backgroundColor: 'black',
+    borderRadius: 40,
+    margin: '3%',
+    opacity: 0.6,
+  },
   bigButton: {
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.2)',
+    borderColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     width: 100,
@@ -119,11 +187,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 50,
     margin: '3%',
-    opacity: 0.7,
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
+  },
+  colorBlindFilterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: '12%',
+    backgroundColor: 'white',
+    paddingBottom: '5%',
+  },
+  colorBlindFilterIconContainer: {
+    margin: '3%',
   },
 });
