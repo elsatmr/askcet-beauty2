@@ -12,6 +12,8 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import BackButton from '../../components/BackButton/BackButton';
 
 const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -50,6 +52,11 @@ const CameraScreen = () => {
     }
   };
 
+  const handleBackButtonPress = () => {
+    setColorBlindFilterOn(false);
+    setImageUri('');
+  };
+
   return (
     <View style={styles.container}>
       {imageUri != '' ? (
@@ -62,6 +69,11 @@ const CameraScreen = () => {
         />
       ) : (
         <Camera style={styles.camera} type={type} ref={cameraRef} />
+      )}
+      {imageUri != '' ? (
+        <BackButton onBackButtonPressed={handleBackButtonPress} />
+      ) : (
+        <SearchBar />
       )}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -141,6 +153,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   camera: {
     flex: 1,
@@ -206,5 +219,10 @@ const styles = StyleSheet.create({
   },
   colorBlindFilterIconContainer: {
     margin: '3%',
+  },
+  searchBarContainer: {
+    backgroundColor: 'red',
+    // position: 'absolute',
+    // top: '10%',
   },
 });
