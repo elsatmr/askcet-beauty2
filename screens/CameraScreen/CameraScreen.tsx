@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera';
 import { useState } from 'react';
 import {
   Button,
@@ -18,6 +18,7 @@ import ColorblindFilterBottomBar from '../../components/ColorblindFilterBottomBa
 import { useAppDispatch } from '../../redux/hooks';
 import { changePage } from '../../redux/actions/AppActions';
 import { AppStateEnum } from '../../utils/enums';
+import ScannerBottomWindow from '../../components/ScannerBottomWindow/ScannerBottomWindow';
 
 const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -26,6 +27,8 @@ const CameraScreen = () => {
   const [imageUri, setImageUri] = React.useState<string>('');
   const [colorBlindFilterOn, setColorBlindFilterOn] =
     React.useState<boolean>(false);
+  const [scannerFeature, setScannerFeature] = React.useState<boolean>(false);
+  const [imageBase64, setImageBase64] = React.useState<string>('');
 
   const dispatch = useAppDispatch();
   if (!permission) {
@@ -58,6 +61,15 @@ const CameraScreen = () => {
     }
   };
 
+  const scanPicture = async () => {
+    if (cameraRef.current) {
+      const photo: CameraCapturedPicture =
+        await cameraRef.current.takePictureAsync({ base64: true });
+      setImageBase64(photo.base64!);
+      setScannerFeature(true);
+    }
+  };
+
   const handleBackButtonPress = () => {
     setColorBlindFilterOn(false);
     setImageUri('');
@@ -85,7 +97,11 @@ const CameraScreen = () => {
       ) : (
         <SearchBar />
       )}
-      <View style={styles.buttonContainer}>
+      <View
+        style={[
+          scannerFeature ? styles.buttonContainerUp : styles.buttonContainer,
+        ]}
+      >
         <TouchableOpacity
           style={[
             colorBlindFilterOn ? styles.activeSmallButton : styles.smallButton,
@@ -98,17 +114,15 @@ const CameraScreen = () => {
             color={colorBlindFilterOn ? 'white' : 'black'}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bigButton}>
+        <TouchableOpacity style={styles.bigButton} onPress={scanPicture}>
           <MaterialCommunityIcons name="scan-helper" size={20} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.smallButton}
-          onPress={navigateToItemPage}
-        >
+        <TouchableOpacity style={styles.smallButton}>
           <Feather name="shopping-bag" size={24} color="black" />
         </TouchableOpacity>
       </View>
       {colorBlindFilterOn && <ColorblindFilterBottomBar />}
+      {scannerFeature && <ScannerBottomWindow b64={imageBase64} />}
     </View>
   );
 };
@@ -130,6 +144,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     bottom: '13%',
+    width: '100%',
+  },
+  buttonContainerUp: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: '30%',
     width: '100%',
   },
   smallButton: {
