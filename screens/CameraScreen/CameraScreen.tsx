@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera';
 import { useState } from 'react';
 import {
@@ -19,6 +19,7 @@ import { useAppDispatch } from '../../redux/hooks';
 import { changePage } from '../../redux/actions/AppActions';
 import { AppStateEnum } from '../../utils/enums';
 import ScannerBottomWindow from '../../components/ScannerBottomWindow/ScannerBottomWindow';
+import { EvilIcons } from '@expo/vector-icons';
 
 const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -49,6 +50,7 @@ const CameraScreen = () => {
   }
 
   const handleColorBlindFilterPress = async () => {
+    setScannerFeature(false);
     await takePicture();
     setColorBlindFilterOn(true);
   };
@@ -114,9 +116,24 @@ const CameraScreen = () => {
             color={colorBlindFilterOn ? 'white' : 'black'}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bigButton} onPress={scanPicture}>
-          <MaterialCommunityIcons name="scan-helper" size={20} color="black" />
-        </TouchableOpacity>
+        {!scannerFeature ? (
+          <TouchableOpacity style={styles.bigButton} onPress={scanPicture}>
+            <MaterialCommunityIcons
+              name="scan-helper"
+              size={20}
+              color="black"
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.bigButton}
+            onPress={() => {
+              setScannerFeature(false);
+            }}
+          >
+            <EvilIcons name="close" size={20} color="black" />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.smallButton}>
           <Feather name="shopping-bag" size={24} color="black" />
         </TouchableOpacity>
