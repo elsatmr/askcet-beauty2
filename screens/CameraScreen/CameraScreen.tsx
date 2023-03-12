@@ -14,6 +14,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import BackButton from '../../components/BackButton/BackButton';
+import ColorblindFilterBottomBar from '../../components/ColorblindFilterBottomBar/ColorblindFilterBottomBar';
+import { useAppDispatch } from '../../redux/hooks';
+import { changePage } from '../../redux/actions/AppActions';
+import { AppStateEnum } from '../../utils/enums';
 
 const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -23,6 +27,7 @@ const CameraScreen = () => {
   const [colorBlindFilterOn, setColorBlindFilterOn] =
     React.useState<boolean>(false);
 
+  const dispatch = useAppDispatch();
   if (!permission) {
     // Camera permissions are still loading
     return <View />;
@@ -48,6 +53,7 @@ const CameraScreen = () => {
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
+      console.log('photo uri', photo.uri);
       setImageUri(photo.uri);
     }
   };
@@ -55,6 +61,10 @@ const CameraScreen = () => {
   const handleBackButtonPress = () => {
     setColorBlindFilterOn(false);
     setImageUri('');
+  };
+
+  const navigateToItemPage = () => {
+    dispatch(changePage(AppStateEnum.ItemScreen));
   };
 
   return (
@@ -91,58 +101,14 @@ const CameraScreen = () => {
         <TouchableOpacity style={styles.bigButton}>
           <MaterialCommunityIcons name="scan-helper" size={20} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.smallButton}>
+        <TouchableOpacity
+          style={styles.smallButton}
+          onPress={navigateToItemPage}
+        >
           <Feather name="shopping-bag" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      {colorBlindFilterOn && (
-        <View style={styles.colorBlindFilterContainer}>
-          <TouchableOpacity>
-            <View style={styles.colorBlindFilterIconContainer}>
-              <Ionicons
-                name="eye"
-                size={24}
-                color="black"
-                style={{ textAlign: 'center' }}
-              />
-              <Text style={{ textAlign: 'center' }}>Normal</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.colorBlindFilterIconContainer}>
-              <Ionicons
-                name="eye-off"
-                size={24}
-                color="#BB6464"
-                style={{ textAlign: 'center' }}
-              />
-              <Text style={{ textAlign: 'center' }}>Protanopia</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.colorBlindFilterIconContainer}>
-              <Ionicons
-                name="eye-off"
-                size={24}
-                color="#90A17D"
-                style={{ textAlign: 'center' }}
-              />
-              <Text style={{ textAlign: 'center' }}>Deuteranopia</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.colorBlindFilterIconContainer}>
-              <Ionicons
-                name="eye-off"
-                size={24}
-                color="#7895B2"
-                style={{ textAlign: 'center' }}
-              />
-              <Text style={{ textAlign: 'center' }}>Tritanopia</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      )}
+      {colorBlindFilterOn && <ColorblindFilterBottomBar />}
     </View>
   );
 };
@@ -200,29 +166,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 50,
     margin: '3%',
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  colorBlindFilterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    height: '12%',
-    backgroundColor: 'white',
-    paddingBottom: '5%',
-  },
-  colorBlindFilterIconContainer: {
-    margin: '3%',
-  },
-  searchBarContainer: {
-    backgroundColor: 'red',
-    // position: 'absolute',
-    // top: '10%',
   },
 });

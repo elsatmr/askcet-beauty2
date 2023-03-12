@@ -1,17 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import CameraScreen from './screens/CameraScreen/CameraScreen';
-import ItemScreen from './screens/ItemScreen/ItemScreen';
+import { store } from './redux';
+import { Provider } from 'react-redux';
+import React from 'react';
+import AppLayout from './layout/AppLayout';
 
 export default function App() {
-  return <CameraScreen />;
+  return (
+    <Provider store={store}>
+      <AppLayout />
+    </Provider>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
