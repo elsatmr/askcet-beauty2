@@ -1,9 +1,18 @@
 import React, { useEffect } from 'react';
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import { fetchScannedItemSearch } from '../../redux/actions/ScanItemActions';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { changePage } from '../../redux/actions/AppActions';
+import { AppStateEnum } from '../../utils/enums';
 
 interface Props {
   b64: string;
@@ -19,8 +28,13 @@ const ScannerBottomWindow = ({ b64 }: Props) => {
   useEffect(() => {
     dispatch(fetchScannedItemSearch());
   }, []);
+
+  const handleArrowPress = () => {
+    dispatch(changePage(AppStateEnum.ItemScreen));
+  };
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleArrowPress}>
       <View style={{ height: '100%' }}>
         <Image
           resizeMode="contain"
@@ -58,7 +72,7 @@ const ScannerBottomWindow = ({ b64 }: Props) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

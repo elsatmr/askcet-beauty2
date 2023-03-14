@@ -95,7 +95,9 @@ const CameraScreen = () => {
         <Camera style={styles.camera} type={type} ref={cameraRef} />
       )}
       {imageUri != '' ? (
-        <BackButton onBackButtonPressed={handleBackButtonPress} />
+        <View style={styles.backButtonContainer}>
+          <BackButton onBackButtonPressed={handleBackButtonPress} />
+        </View>
       ) : (
         <SearchBar />
       )}
@@ -205,5 +207,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 50,
     margin: '3%',
+  },
+  backButtonContainer: {
+    position: 'absolute',
+    top: '8%',
+    left: '8%',
+    borderWidth: 1,
+    borderColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 50,
+    backgroundColor: 'rgba(255,255,255,0.6)',
+    borderRadius: 40,
   },
 });
