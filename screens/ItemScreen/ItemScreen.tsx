@@ -24,6 +24,10 @@ const ItemScreen = () => {
     dispatch(changePage(AppStateEnum.CameraScreen));
   };
   const item = useAppSelector((state) => state.ScanItemReducer.item);
+
+  const handleDetailsViewPress = () => {
+    dispatch(changePage(AppStateEnum.DetailsScreen));
+  };
   return (
     <View style={styles.container}>
       <View style={styles.topPart}>
@@ -86,10 +90,13 @@ const ItemScreen = () => {
       </View> */}
       <View style={styles.itemDetailNavContainer}>
         <View style={styles.itemDetailParentNav}>
-          <View style={styles.itemDetailNav}>
+          <TouchableOpacity
+            style={styles.itemDetailNav}
+            onPress={handleDetailsViewPress}
+          >
             <Text style={styles.textStyle}>Details</Text>
             <AntDesign name="arrowright" size={18} color="black" />
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.itemDetailParentNav}>
           <View style={styles.itemDetailNav}>
