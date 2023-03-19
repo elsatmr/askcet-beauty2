@@ -1,20 +1,19 @@
 import React from 'react';
-import CartButton from '../../components/CartButton/CartButton';
 import {
   ScrollView,
   View,
   Text,
-  StyleSheet,
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useAppDispatch } from '../../redux/hooks';
 import { Slider } from '@miblanchard/react-native-slider';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { changePage } from '../../redux/actions/AppActions';
 import { AppStateEnum } from '../../utils/enums';
 import * as Speech from 'expo-speech';
+import { styles } from './ProductSectionStyle';
 
 interface Props {
   headerText: string;
@@ -91,63 +90,5 @@ const ProductSectionScreen = ({ headerText, mainText }: Props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: '5%',
-  },
-  insidePadding: {
-    flex: 1,
-  },
-  topPart: {
-    // backgroundColor: 'red',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    paddingBottom: '3%',
-    flex: 0.05,
-  },
-  textContainer: {
-    // backgroundColor: 'green',
-    flex: 1,
-  },
-  headerStyle: {
-    fontSize: 21,
-    fontFamily: 'Optima-Medium',
-  },
-  sliderIconParentContainer: {
-    flex: 0.12,
-    // backgroundColor: 'yellow',
-    // justifyContent: 'flex-end',
-  },
-  sliderIconContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // backgroundColor: 'yellow',
-  },
-  sliderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  voiceOverContainer: {
-    // backgroundColor: 'red',
-    flex: 1,
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
-  },
-  voiceOverButton: {
-    borderWidth: 1,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 75,
-    height: 75,
-    backgroundColor: 'black',
-    borderRadius: 50,
-    margin: '3%',
-  },
-});
 
 export default ProductSectionScreen;

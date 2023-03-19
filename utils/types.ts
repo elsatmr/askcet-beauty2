@@ -6,4 +6,5 @@ export interface IScanItem {
   details: string;
   ingredients: string;
   howTo: string;
+  image: string;
 }

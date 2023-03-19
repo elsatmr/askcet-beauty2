@@ -7,35 +7,41 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import { fetchScannedItemSearch } from '../../redux/actions/ScanItemActions';
+import {
+  fetchScannedItemSearch,
+  setScannedItemSearch,
+} from '../../redux/actions/ScanItemActions';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { changePage } from '../../redux/actions/AppActions';
 import { AppStateEnum } from '../../utils/enums';
+import { IScanItem } from '../../utils/types';
 
 interface Props {
   b64: string;
+  item: IScanItem;
 }
 
 const screenWidth = Dimensions.get('window').width;
 
-const ScannerBottomWindow = ({ b64 }: Props) => {
+const ScannerBottomWindow = ({ b64, item }: Props) => {
   const dispatch = useAppDispatch();
-  const scannedItemState = useAppSelector(
-    (state) => state.ScanItemReducer.item
-  );
-  useEffect(() => {
-    dispatch(fetchScannedItemSearch());
-  }, []);
-
   const handleArrowPress = () => {
     dispatch(changePage(AppStateEnum.ItemScreen));
+    dispatch(setScannedItemSearch(item));
   };
 
   return (
     <TouchableOpacity style={styles.container} onPress={handleArrowPress}>
-      <View style={{ height: '100%' }}>
+      <View
+        style={{
+          height: '100%',
+          backgroundColor: 'rgba(255,255,255,0.6)',
+          borderBottomLeftRadius: 20,
+          borderTopLeftRadius: 20,
+        }}
+      >
         <Image
           resizeMode="contain"
           style={{
@@ -51,13 +57,19 @@ const ScannerBottomWindow = ({ b64 }: Props) => {
       <View style={styles.textParentContainer}>
         <View style={styles.textChildContainer}>
           <View>
-            <Text style={{ fontFamily: 'Optima-Medium', flexWrap: 'wrap' }}>
-              {scannedItemState.name}
+            <Text
+              style={{
+                fontFamily: 'Optima-Medium',
+                flexWrap: 'wrap',
+                fontSize: 16,
+              }}
+            >
+              {item.name}
             </Text>
           </View>
           <View style={styles.ratingContainer}>
-            <Text style={{ fontFamily: 'Optima-Medium' }}>
-              {scannedItemState.rating}{' '}
+            <Text style={{ fontFamily: 'Optima-Medium', fontSize: 16 }}>
+              {item.rating}
             </Text>
             <MaterialIcons name="star-rate" size={14} color="black" />
           </View>
@@ -78,24 +90,21 @@ const ScannerBottomWindow = ({ b64 }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
-    position: 'absolute',
-    bottom: '13%',
-    height: '15%',
     alignItems: 'center',
-    width: screenWidth * 0.8,
   },
   textParentContainer: {
-    height: '80%',
+    height: '100%',
     backgroundColor: 'rgba(255,255,255,0.6)',
     justifyContent: 'center',
     borderBottomRightRadius: 20,
     borderTopRightRadius: 20,
     flex: 1,
-    padding: '3%',
   },
   textChildContainer: {
     // backgroundColor: 'red',
+    marginLeft: '5%',
   },
   ratingContainer: {
     flexDirection: 'row',

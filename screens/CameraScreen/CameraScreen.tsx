@@ -3,11 +3,11 @@ import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera';
 import { useState } from 'react';
 import {
   Button,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Image,
+  ScrollView,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,11 +15,14 @@ import { Feather } from '@expo/vector-icons';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import BackButton from '../../components/BackButton/BackButton';
 import ColorblindFilterBottomBar from '../../components/ColorblindFilterBottomBar/ColorblindFilterBottomBar';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { changePage } from '../../redux/actions/AppActions';
 import { AppStateEnum } from '../../utils/enums';
 import ScannerBottomWindow from '../../components/ScannerBottomWindow/ScannerBottomWindow';
 import { EvilIcons } from '@expo/vector-icons';
+import { styles } from './CameraScreenStyle';
+import { FontAwesome } from '@expo/vector-icons';
+import { fetchScannedItemSearch } from '../../redux/actions/ScanItemActions';
 
 const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -30,6 +33,9 @@ const CameraScreen = () => {
     React.useState<boolean>(false);
   const [scannerFeature, setScannerFeature] = React.useState<boolean>(false);
   const [imageBase64, setImageBase64] = React.useState<string>('');
+  const scannedItemSearchState = useAppSelector(
+    (state) => state.ScanItemReducer.items
+  );
 
   const dispatch = useAppDispatch();
   if (!permission) {
@@ -68,6 +74,7 @@ const CameraScreen = () => {
       const photo: CameraCapturedPicture =
         await cameraRef.current.takePictureAsync({ base64: true });
       setImageBase64(photo.base64!);
+      dispatch(fetchScannedItemSearch(imageBase64));
       setScannerFeature(true);
     }
   };
@@ -75,10 +82,6 @@ const CameraScreen = () => {
   const handleBackButtonPress = () => {
     setColorBlindFilterOn(false);
     setImageUri('');
-  };
-
-  const navigateToItemPage = () => {
-    dispatch(changePage(AppStateEnum.ItemScreen));
   };
 
   return (
@@ -94,12 +97,10 @@ const CameraScreen = () => {
       ) : (
         <Camera style={styles.camera} type={type} ref={cameraRef} />
       )}
-      {imageUri != '' ? (
+      {imageUri != '' && (
         <View style={styles.backButtonContainer}>
           <BackButton onBackButtonPressed={handleBackButtonPress} />
         </View>
-      ) : (
-        <SearchBar />
       )}
       <View
         style={[
@@ -137,88 +138,34 @@ const CameraScreen = () => {
           </TouchableOpacity>
         )}
         <TouchableOpacity style={styles.smallButton}>
+          <FontAwesome name="microphone" size={18} color="black" />
           <Feather name="shopping-bag" size={24} color="black" />
         </TouchableOpacity>
       </View>
       {colorBlindFilterOn && <ColorblindFilterBottomBar />}
-      {scannerFeature && <ScannerBottomWindow b64={imageBase64} />}
+      {scannerFeature && (
+        <View style={styles.searchResultItemScrollViewContainer}>
+          <ScrollView
+            horizontal={true}
+            style={styles.searchResultScrollView}
+            contentContainerStyle={{
+              width: `${100 * scannedItemSearchState.length}%`,
+            }}
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={200}
+            decelerationRate="fast"
+            pagingEnabled
+          >
+            {scannedItemSearchState.map((item) => {
+              return (
+                <ScannerBottomWindow key={item} b64={item.image} item={item} />
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 };
 
 export default CameraScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: '13%',
-    width: '100%',
-  },
-  buttonContainerUp: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: '30%',
-    width: '100%',
-  },
-  smallButton: {
-    borderWidth: 1,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 80,
-    height: 80,
-    backgroundColor: '#fff',
-    borderRadius: 40,
-    margin: '3%',
-    opacity: 0.6,
-  },
-  activeSmallButton: {
-    borderWidth: 1,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 80,
-    height: 80,
-    backgroundColor: 'black',
-    borderRadius: 40,
-    margin: '3%',
-    opacity: 0.6,
-  },
-  bigButton: {
-    borderWidth: 1,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 100,
-    height: 100,
-    backgroundColor: '#fff',
-    borderRadius: 50,
-    margin: '3%',
-  },
-  backButtonContainer: {
-    position: 'absolute',
-    top: '8%',
-    left: '8%',
-    borderWidth: 1,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 50,
-    height: 50,
-    backgroundColor: 'rgba(255,255,255,0.6)',
-    borderRadius: 40,
-  },
-});

@@ -1,15 +1,18 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { IScanItem } from '../../utils/types';
-import { fetchScannedItemSearch } from '../actions/ScanItemActions';
+import {
+  fetchScannedItemSearch,
+  setScannedItemSearch,
+} from '../actions/ScanItemActions';
 
 interface ScanItemState {
   isLoading: boolean;
-  item: IScanItem;
+  items: IScanItem[];
 }
 
 export const initialScanItemState: ScanItemState = {
   isLoading: false,
-  item: {} as IScanItem,
+  items: [{} as IScanItem],
 };
 
 export const ScanItemReducer = createReducer(
@@ -19,8 +22,12 @@ export const ScanItemReducer = createReducer(
       state.isLoading = true;
     });
     builder.addCase(fetchScannedItemSearch.fulfilled, (state, action) => {
-      state.item = action.payload;
+      state.items = action.payload;
       state.isLoading = false;
+    });
+    builder.addCase(setScannedItemSearch, (state, action) => {
+      state.items = [];
+      state.items.push(action.payload);
     });
   }
 );

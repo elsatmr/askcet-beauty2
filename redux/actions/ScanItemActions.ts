@@ -3,7 +3,7 @@ import { IScanItem } from '../../utils/types';
 
 export const fetchScannedItemSearch = createAsyncThunk(
   'ScanItemReducer/FetchScannedItemSearch',
-  async () => {
+  async (image64: string) => {
     const item: IScanItem = {
       name: 'Double Wear Stay-in-Place Foundation',
       rating: 4.5,
@@ -16,7 +16,12 @@ export const fetchScannedItemSearch = createAsyncThunk(
         'It is an Allure Best of Beauty award winner.',
       ingredients: '',
       howTo: '',
+      image: image64,
     };
-    return item;
+    return [item];
   }
+);
+
+export const setScannedItemSearch = createAction<IScanItem>(
+  'SET_SCANNED_ITEM_SEARCH_ACTION'
 );
