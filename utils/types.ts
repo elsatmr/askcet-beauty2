@@ -4,4 +4,6 @@ export interface IScanItem {
   size: string;
   price: number;
   details: string;
+  ingredients: string;
+  howTo: string;
 }
