@@ -4,6 +4,7 @@ export enum AppStateEnum {
   DetailsScreen = 'DetailsScreen',
   HowToUseScreen = 'HowToUseScreen',
   IngredientsScreen = 'IngredientsScreen',
+  CartScreen = 'CartScreen',
 }
 
 export enum URLS {

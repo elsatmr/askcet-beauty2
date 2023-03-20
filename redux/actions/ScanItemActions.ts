@@ -20,7 +20,7 @@ export const fetchScannedItemSearch = createAsyncThunk(
         details: item.details_summarized,
         ingredients: '\u2022' + item.ingredients.split(',').join('\n\u2022'),
         howTo: item.how_to_use_summarized,
-        image: '',
+        image: item.image_url,
       };
       return [res];
     } catch (err) {
@@ -33,13 +33,14 @@ export const setScannedItemSearch = createAction<IScanItem>(
   'SET_SCANNED_ITEM_SEARCH_ACTION'
 );
 
-export const fetchAudioSearch = createAsyncThunk(
-  'ScanItemReducer/FetchAudioSearch',
-  async (audioData: any) => {
-    const { data } = await axios.post(
-      `http://192.168.0.8:8000/speech-to-text-search`,
-      { audio: { content: audioData } },
-      { headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+export const setScannerFeatureOn = createAction<boolean>(
+  'SET_SCANNED_FEATURE_ON_ACTION'
+);
+
+export const setAudioSearchResult = createAction<IScanItem>(
+  'SET_AUDIO_SEARCH_ACTION'
+);
+
+export const setAudioSearchLoading = createAction<boolean>(
+  'SET_AUDIO_SEARCH_LOADING_ACTION'
 );

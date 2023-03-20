@@ -4,7 +4,6 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Dimensions,
   ScrollView,
   SafeAreaView,
 } from 'react-native';
@@ -16,6 +15,7 @@ import { AppStateEnum } from '../../utils/enums';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from './ItemScreenStyle';
+import TtsButton from '../../components/TtsButton/TtsButton';
 
 const ItemScreen = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +39,7 @@ const ItemScreen = () => {
       <View style={styles.insidePadding}>
         <View style={styles.topPart}>
           <BackButton onBackButtonPressed={handleBackButtonPress} />
-          <CartButton />
+          <CartButton backTo={AppStateEnum.ItemScreen} />
         </View>
         <ScrollView style={styles.mainPart}>
           <View style={styles.mainPartChild}>
@@ -59,7 +59,9 @@ const ItemScreen = () => {
                     aspectRatio: 1,
                     borderRadius: 10,
                   }}
-                  source={require('../../assets/fondee.jpg')}
+                  source={{
+                    uri: item.image,
+                  }}
                 />
               </View>
             </View>
@@ -82,7 +84,10 @@ const ItemScreen = () => {
             <View style={styles.itemDetailNavContainer}>
               {productSections.map((item: object) => {
                 return (
-                  <View style={styles.itemDetailParentNav}>
+                  <View
+                    style={styles.itemDetailParentNav}
+                    key={Object.keys(item)[0]}
+                  >
                     <TouchableOpacity
                       style={styles.itemDetailNav}
                       onPress={() => {
@@ -102,6 +107,20 @@ const ItemScreen = () => {
             </View>
           </View>
         </ScrollView>
+        <View style={styles.footer}>
+          <TtsButton
+            mainText={
+              'Item Name: ' +
+              item.name +
+              ', Item Rating: ' +
+              item.rating +
+              ', Item Price: ' +
+              item.price +
+              'dollars, Item Size: ' +
+              item.size
+            }
+          />
+        </View>
       </View>
     </SafeAreaView>
   );

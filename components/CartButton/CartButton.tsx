@@ -1,15 +1,23 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { changePage, setBackTo } from '../../redux/actions/AppActions';
+import { AppStateEnum } from '../../utils/enums';
 
 interface Props {
-  buttonStyle?: object;
+  backTo: AppStateEnum;
 }
 
-const CartButton = ({ buttonStyle }: Props) => {
+const CartButton = ({ backTo }: Props) => {
+  const dispatch = useAppDispatch();
+  const onPress = () => {
+    dispatch(changePage(AppStateEnum.CartScreen));
+    dispatch(setBackTo(backTo));
+  };
   return (
     <View>
-      <TouchableOpacity style={buttonStyle}>
+      <TouchableOpacity style={styles.buttonStyle} onPress={onPress}>
         <Feather name="shopping-bag" size={24} color="black" />
       </TouchableOpacity>
     </View>
@@ -17,3 +25,7 @@ const CartButton = ({ buttonStyle }: Props) => {
 };
 
 export default CartButton;
+
+const styles = StyleSheet.create({
+  buttonStyle: {},
+});

@@ -18,11 +18,16 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import ScannerBottomWindow from '../../components/ScannerBottomWindow/ScannerBottomWindow';
 import { EvilIcons } from '@expo/vector-icons';
 import { styles } from './CameraScreenStyle';
-import { fetchScannedItemSearch } from '../../redux/actions/ScanItemActions';
+import {
+  fetchScannedItemSearch,
+  setScannerFeatureOn,
+} from '../../redux/actions/ScanItemActions';
 import AudioSearch from '../../components/AudioSearch/AudioSearch';
 import { setOriginalImageBase64Action } from '../../redux/actions/ColorblindActions';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import Toast from 'react-native-root-toast';
+import CartButton from '../../components/CartButton/CartButton';
+import { AppStateEnum } from '../../utils/enums';
 
 const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -88,7 +93,7 @@ const CameraScreen = () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
       dispatch(fetchScannedItemSearch(photo!.base64!));
-      setScannerFeature(true);
+      dispatch(setScannerFeatureOn(true));
     }
   };
 
@@ -107,7 +112,12 @@ const CameraScreen = () => {
           }}
         />
       ) : (
-        <Camera style={styles.camera} type={type} ref={cameraRef} />
+        <>
+          <Camera style={styles.camera} type={type} ref={cameraRef} />
+          <View style={styles.cartButton}>
+            <CartButton backTo={AppStateEnum.CameraScreen} />
+          </View>
+        </>
       )}
       {imageBase64Shown != '' && (
         <View style={styles.backButtonContainer}>
@@ -117,7 +127,9 @@ const CameraScreen = () => {
       {!colorBlindFilterOn && (
         <View
           style={[
-            scannerFeature ? styles.buttonContainerUp : styles.buttonContainer,
+            scanItemReducer.scannerFeatureOn
+              ? styles.buttonContainerUp
+              : styles.buttonContainer,
           ]}
         >
           <TouchableOpacity
@@ -134,7 +146,7 @@ const CameraScreen = () => {
               color={colorBlindFilterOn ? 'white' : 'black'}
             />
           </TouchableOpacity>
-          {!scannerFeature ? (
+          {!scanItemReducer.scannerFeatureOn ? (
             <TouchableOpacity style={styles.bigButton} onPress={scanPicture}>
               <MaterialCommunityIcons
                 name="scan-helper"
@@ -146,7 +158,7 @@ const CameraScreen = () => {
             <TouchableOpacity
               style={styles.bigButton}
               onPress={() => {
-                setScannerFeature(false);
+                dispatch(setScannerFeatureOn(false));
               }}
             >
               <EvilIcons name="close" size={20} color="black" />
@@ -158,8 +170,9 @@ const CameraScreen = () => {
       {colorBlindFilterOn && (
         <ColorblindFilterBottomBar ogImage64={imageBase64} />
       )}
+      {scanItemReducer.isAudioLoading && <LoadingScreen />}
       {colorBlindFilterState.isLoading && <LoadingScreen />}
-      {scannerFeature && !scanItemReducer.isLoading && (
+      {scanItemReducer.scannerFeatureOn && !scanItemReducer.isLoading && (
         <View style={styles.searchResultItemScrollViewContainer}>
           <ScrollView
             horizontal={true}
@@ -184,7 +197,7 @@ const CameraScreen = () => {
           </ScrollView>
         </View>
       )}
-      {scannerFeature && scanItemReducer.isLoading && (
+      {scanItemReducer.scannerFeatureOn && scanItemReducer.isLoading && (
         <View style={styles.searchResultItemScrollViewContainer}>
           <View style={styles.scannerLoadingContainer}>
             <ActivityIndicator />

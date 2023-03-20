@@ -50,7 +50,7 @@ const ScannerBottomWindow = ({ b64, item }: Props) => {
             aspectRatio: 1,
             borderRadius: 10,
           }}
-          source={require('../../assets/fondee.jpg')}
+          source={{ uri: item.image }}
         />
       </View>
       <View style={styles.textParentContainer}>

@@ -14,6 +14,7 @@ import { changePage } from '../../redux/actions/AppActions';
 import { AppStateEnum } from '../../utils/enums';
 import * as Speech from 'expo-speech';
 import { styles } from './ProductSectionStyle';
+import TtsButton from '../../components/TtsButton/TtsButton';
 
 interface Props {
   headerText: string;
@@ -72,18 +73,7 @@ const ProductSectionScreen = ({ headerText, mainText }: Props) => {
                 }}
               />
             </View>
-            <View style={styles.voiceOverContainer}>
-              <TouchableOpacity
-                style={styles.voiceOverButton}
-                onPress={handleTtsPress}
-              >
-                <MaterialIcons
-                  name="record-voice-over"
-                  size={24}
-                  color="white"
-                />
-              </TouchableOpacity>
-            </View>
+            <TtsButton mainText={mainText} />
           </View>
         </View>
       </View>

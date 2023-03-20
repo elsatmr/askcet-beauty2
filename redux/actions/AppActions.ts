@@ -8,3 +8,5 @@ export const changePage = createAction('CHANGE_PAGE', (page: AppStateEnum) => {
     },
   };
 });
+
+export const setBackTo = createAction<AppStateEnum>('SET_BACK_TO_ACTION');

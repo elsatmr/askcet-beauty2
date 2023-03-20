@@ -7,6 +7,7 @@ import { AppStateEnum } from '../utils/enums';
 import { View } from 'react-native';
 import DetailsScreen from '../screens/ProductSectionScreen/ProductSectionScreen';
 import ProductSectionScreen from '../screens/ProductSectionScreen/ProductSectionScreen';
+import CartScreen from '../screens/CartScreen/CartScreen';
 
 const AppLayout = () => {
   const appState: AppStateEnum = useAppSelector(
@@ -35,6 +36,7 @@ const AppLayout = () => {
           mainText={itemState.ingredients}
         />
       )}
+      {appState == AppStateEnum.CartScreen && <CartScreen />}
     </>
   );
 };

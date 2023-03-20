@@ -78,4 +78,7 @@ export const styles = StyleSheet.create({
   rightArrowContainer: {
     justifyContent: 'center',
   },
+  footer: {
+    flex: 0.12,
+  },
 });
