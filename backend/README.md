@@ -14,9 +14,8 @@ Install required packages: `pip install -r requirements.txt`
 
 Install ffmpeg: `brew install ffmpeg`
 
-## ElasticSearch
+## ElasticSearch (Not necessary because the elasticsearch service has been deployed to EC2 server)
 
-Not necessary because the elasticsearch service has been deployed to EC2 server.
 
 #### Connect to SSH
 run `./run_aws.sh {ADDRESS}`
