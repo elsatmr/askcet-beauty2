@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import AppLayout from './layout/AppLayout';
 import { useFonts } from 'expo-font';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -13,7 +14,9 @@ export default function App() {
   });
   return (
     <Provider store={store}>
-      <AppLayout />
+      <RootSiblingParent>
+        <AppLayout />
+      </RootSiblingParent>
     </Provider>
   );
 }

@@ -22,6 +22,7 @@ import { fetchScannedItemSearch } from '../../redux/actions/ScanItemActions';
 import AudioSearch from '../../components/AudioSearch/AudioSearch';
 import { setOriginalImageBase64Action } from '../../redux/actions/ColorblindActions';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
+import Toast from 'react-native-root-toast';
 
 const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -42,7 +43,17 @@ const CameraScreen = () => {
   );
 
   useEffect(() => {
-    scanItemReducer.isFailed && setScannerFeature(false);
+    if (scanItemReducer.isFailed) {
+      setScannerFeature(false);
+      Toast.show('No items found', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
+    }
   }, [scanItemReducer.isFailed]);
   const dispatch = useAppDispatch();
   if (!permission) {
