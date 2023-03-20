@@ -12,7 +12,7 @@ const AppLayout = () => {
   const appState: AppStateEnum = useAppSelector(
     (state) => state.AppReducer.page
   );
-  const itemState = useAppSelector((state) => state.ScanItemReducer.item);
+  const itemState = useAppSelector((state) => state.ScanItemReducer.items[0]);
   return (
     <>
       {appState == AppStateEnum.CameraScreen && <CameraScreen />}

@@ -31,7 +31,6 @@ const ScannerBottomWindow = ({ b64, item }: Props) => {
     dispatch(changePage(AppStateEnum.ItemScreen));
     dispatch(setScannedItemSearch(item));
   };
-
   return (
     <TouchableOpacity style={styles.container} onPress={handleArrowPress}>
       <View

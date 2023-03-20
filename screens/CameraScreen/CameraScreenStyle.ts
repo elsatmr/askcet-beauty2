@@ -18,6 +18,16 @@ export const styles = StyleSheet.create({
     bottom: '13%',
     width: '100%',
   },
+  disabledButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: '13%',
+    width: '100%',
+    disabled: true,
+  },
   buttonContainerUp: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -37,6 +47,7 @@ export const styles = StyleSheet.create({
     borderRadius: 40,
     margin: '3%',
     opacity: 0.6,
+    disabled: true,
   },
   activeSmallButton: {
     borderWidth: 1,
@@ -84,5 +95,15 @@ export const styles = StyleSheet.create({
     height: '15%',
     paddingRight: '5%',
     paddingLeft: '5%',
+    width: '100%',
+  },
+  scannerLoadingContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.7)',
   },
 });

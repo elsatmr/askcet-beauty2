@@ -1,11 +1,45 @@
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {
+  daltonizeImage,
+  setOriginalImageBase64Action,
+} from '../../redux/actions/ColorblindActions';
+import { ColorBlindType } from '../../utils/enums';
 
-const ColorblindFilterBottomBar = () => {
+interface Props {
+  ogImage64: string;
+}
+
+const ColorblindFilterBottomBar = ({ ogImage64 }: Props) => {
+  const dispatch = useAppDispatch();
+
+  const dispatchDeuteranopia = () => {
+    dispatch(
+      daltonizeImage({ image64: ogImage64, type: ColorBlindType.Deuteranopia })
+    );
+  };
+
+  const dispatchProtanopia = () => {
+    dispatch(
+      daltonizeImage({ image64: ogImage64, type: ColorBlindType.Protanopia })
+    );
+  };
+
+  const dispatchTritanopia = () => {
+    dispatch(
+      daltonizeImage({ image64: ogImage64, type: ColorBlindType.Tritanopia })
+    );
+  };
+
+  const resetOriginal = () => {
+    dispatch(setOriginalImageBase64Action(ogImage64));
+  };
+
   return (
     <View style={styles.colorBlindFilterContainer}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={resetOriginal}>
         <View style={styles.colorBlindFilterIconContainer}>
           <Ionicons
             name="eye"
@@ -16,7 +50,7 @@ const ColorblindFilterBottomBar = () => {
           <Text style={{ textAlign: 'center' }}>Normal</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={dispatchProtanopia}>
         <View style={styles.colorBlindFilterIconContainer}>
           <Ionicons
             name="eye-off"
@@ -27,7 +61,7 @@ const ColorblindFilterBottomBar = () => {
           <Text style={{ textAlign: 'center' }}>Protanopia</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={dispatchDeuteranopia}>
         <View style={styles.colorBlindFilterIconContainer}>
           <Ionicons
             name="eye-off"
@@ -38,7 +72,7 @@ const ColorblindFilterBottomBar = () => {
           <Text style={{ textAlign: 'center' }}>Deuteranopia</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={dispatchTritanopia}>
         <View style={styles.colorBlindFilterIconContainer}>
           <Ionicons
             name="eye-off"

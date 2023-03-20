@@ -32,7 +32,24 @@
             "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
           }
         ]
-      ]
+      ],
+      "ios": {
+        "infoPlist": {
+          "NSAppTransportSecurity": {
+            "NSAllowsLocalNetworking": true,
+            "NSAllowsArbitraryLoads": true,
+            "NSExceptionAllowsInsecureHTTPLoads": true,
+            "127.0.0.1": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSIncludesSubdomains": true
+            },
+            "192.168.0.8": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSIncludesSubdomains": true
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -1,27 +1,45 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { IScanItem } from '../../utils/types';
+import axios from 'axios';
 
 export const fetchScannedItemSearch = createAsyncThunk(
   'ScanItemReducer/FetchScannedItemSearch',
   async (image64: string) => {
-    const item: IScanItem = {
-      name: 'Double Wear Stay-in-Place Foundation',
-      rating: 4.5,
-      size: '1 oz/ 30 mL',
-      price: 43.0,
-      details:
-        'This 24-hour liquid foundation provides a matte finish and full coverage.' +
-        "It's suitable for combination and oily skin and free of fragrance. It comes in over 55 shades with cool- neutral- " +
-        'and warm undertones to suit all skin tones. It is oil-free and oil-controlling- and lasts in hot and humid weather.' +
-        'It is an Allure Best of Beauty award winner.',
-      ingredients: '',
-      howTo: '',
-      image: image64,
-    };
-    return [item];
+    try {
+      const { data } = await axios.post(
+        `http://192.168.0.8:8000/ocr-search`,
+        { image: image64 },
+        { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
+      );
+      const item = data.result;
+      const res: IScanItem = {
+        name: item.name,
+        rating: item.rating,
+        size: item.size,
+        price: item.price,
+        details: item.details_summarized,
+        ingredients: '\u2022' + item.ingredients.split(',').join('\n\u2022'),
+        howTo: item.how_to_use_summarized,
+        image: '',
+      };
+      return [res];
+    } catch (err) {
+      throw new Error('unable to get data');
+    }
   }
 );
 
 export const setScannedItemSearch = createAction<IScanItem>(
   'SET_SCANNED_ITEM_SEARCH_ACTION'
+);
+
+export const fetchAudioSearch = createAsyncThunk(
+  'ScanItemReducer/FetchAudioSearch',
+  async (audioData: any) => {
+    const { data } = await axios.post(
+      `http://192.168.0.8:8000/speech-to-text-search`,
+      { audio: { content: audioData } },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 );
